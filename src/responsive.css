@@ -1,0 +1,103 @@
+@media (max-width: 480px) {
+
+    :root {
+        --title-xl: 28px;
+        --title-lg: 24px;
+        --title-md: 20px;
+        --text-base: 16px;
+        --text-sm: 14px;
+
+        --box-width: 240px;
+        --img-width: 140px;
+
+        --btn-width: 100px;
+        --btn-height: 32px;
+        --btn-font: 16px;
+
+        --icon-sm: 16px;
+        --icon-md: 20px;
+        --icon-lg: 24px;
+
+        --container-width: 480px;
+    }
+}
+
+
+
+/* ---------- Планшеты 481–768px ---------- */
+@media (min-width: 481px) and (max-width: 768px) {
+
+    :root {
+        --title-xl: 32px;
+        --title-lg: 28px;
+        --title-md: 24px;
+        --text-base: 18px;
+        --text-sm: 15px;
+
+        --box-width: 260px;
+        --img-width: 160px;
+
+        --btn-width: 120px;
+        --btn-height: 36px;
+        --btn-font: 17px;
+
+        --icon-sm: 18px;
+        --icon-md: 22px;
+        --icon-lg: 26px;
+
+        --container-width: 768px;
+    }
+}
+
+
+
+/* ---------- Ноутбуки 769–1280px ---------- */
+@media (min-width: 769px) and (max-width: 1280px) {
+
+    :root {
+        --title-xl: 36px;
+        --title-lg: 32px;
+        --title-md: 28px;
+        --text-base: 19px;
+        --text-sm: 16px;
+
+        --box-width: 280px;
+        --img-width: 180px;
+
+        --btn-width: 130px;
+        --btn-height: 38px;
+        --btn-font: 18px;
+
+        --icon-sm: 20px;
+        --icon-md: 24px;
+        --icon-lg: 28px;
+
+        --container-width: 1280px;
+    }
+}
+
+
+/* ---------- Большие ноуты до 1440px ---------- */
+@media (min-width: 1281px) and (max-width: 1440px) {
+
+    :root {
+        --title-xl: 40px;
+        --title-lg: 32px;
+        --title-md: 28px;
+        --text-base: 20px;
+        --text-sm: 16px;
+
+        --box-width: 300px;
+        --img-width: 200px;
+
+        --btn-width: 140px;
+        --btn-height: 40px;
+        --btn-font: 18px;
+
+        --icon-sm: 22px;
+        --icon-md: 26px;
+        --icon-lg: 30px;
+
+        --container-width: 1440px;
+    }
+}

@@ -1,0 +1,77 @@
+.HomePageContainer {
+  background-image: url('@/assets/pictures/HomeBackground.jpg');
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px !important;
+}
+
+.LinkSection{
+  position: fixed;
+  bottom: 50px;
+  left: 50px;
+  user-select: none;
+  display: flex;
+  gap: 1rem ;
+}
+.icon{
+  background: linear-gradient(270deg, #4C763B, #143D60, #61A3BA, #043915);
+    background-size: 600% 600%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 8s ease infinite;
+}
+.ShortResume{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: var(--box-width);
+  font-size: var(--title-md);
+  user-select: none;
+  display: flex;
+  align-items: end;
+}
+.ShortResume p{
+  background: linear-gradient(270deg, #4C763B, #143D60, #61A3BA, #043915);
+    background-size: 600% 600%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 8s ease infinite;
+   font-family: "Permanent Marker", cursive;
+}
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+
+/* @media (min-width: 380px) and (max-width: 480px) {
+
+}
+
+
+
+@media (min-width: 481px) and (max-width: 768px) {
+
+}
+
+
+
+@media (min-width: 769px) and (max-width: 1280px) {
+
+}
+
+
+@media (min-width: 1281px) and (max-width: 1440px) {
+
+}  */

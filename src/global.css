@@ -1,0 +1,20 @@
+:root {
+    /* Шрифты */
+    --title-xl: 40px;
+    --title-lg: 32px;
+    --title-md: 28px;
+    --text-base: 20px;
+    --text-sm: 16px;
+
+    /* Ширины блоков */
+    --box-width: 300px;
+    --img-width: 200px;
+
+    /* Кнопки */
+    --btn-width: 140px;
+    --btn-height: 40px;
+    --btn-font: 18px;
+
+    /* Контейнер */
+    --container-width: 1440px;
+}
