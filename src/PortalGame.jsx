@@ -187,10 +187,6 @@ scene.add(spotLight);
 
     const animate = () => {
       requestAnimationFrame(animate);
-        portals.forEach((portal) => {
-    portal.rotation.y += 0.01;
-  });
-
       // простая анимация — покачивание игрока относительно базовой высоты
       if (playerObj && playerObj.mesh) {
         playerObj.mesh.position.y = playerBaseY + Math.sin(Date.now() * 0.002) * 0.6;
