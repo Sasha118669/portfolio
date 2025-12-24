@@ -21,6 +21,7 @@ export default function PortalGame() {
 
 
 // После создания scene, добавьте:
+const portals = []; // тут будем хранить только СИНИЕ КРУГИ
 // Загрузка портала
 const loader = new GLTFLoader();
 // Функция для создания портала
@@ -42,19 +43,36 @@ const createPortal = (x, y, z, scale = 20, rotationY = 0) => {
       scene.add(portal);
       console.log(`Portal created at (${x}, ${y}, ${z})`);
 
-      // Сделаем портал светящимся
-      portal.traverse((child) => {
-  if (child.isMesh) {
-    child.material.transparent = false;
-    child.material.opacity = 1;
-    child.material.needsUpdate = true;
-    child.material.color.multiplyScalar(1.5);
-  }
-    if (child.isMesh && child.material.emissive) {
-    child.material.emissive.set(0x00aaff); // цвет свечения
-    child.material.emissiveIntensity = 6; // ↑ чем больше — тем ярче
-  }
+      let blueCore = null;
+
+portal.traverse((child) => {
+  if (!child.isMesh || !child.material) return;
+
+  // если материал массив
+  const materials = Array.isArray(child.material)
+    ? child.material
+    : [child.material];
+
+  materials.forEach((mat) => {
+    mat.transparent = false;
+    mat.opacity = 1;
+    mat.color?.multiplyScalar(1.5);
+
+    if (mat.emissive) {
+      mat.emissive.set(0x00aaff);
+      mat.emissiveIntensity = 6;
+      blueCore = child;
+    }
+
+    mat.needsUpdate = true;
+  });
 });
+
+// сохраняем ТОЛЬКО синий круг
+if (blueCore) {
+  blueCore.userData.rotateSpeed = 0.02;
+  portals.push(blueCore);
+}
     },
     
     undefined,
@@ -187,6 +205,10 @@ scene.add(spotLight);
 
     const animate = () => {
       requestAnimationFrame(animate);
+      // Анимируем синие круги порталов
+      portals.forEach((blueCore) => {
+    blueCore.rotation.z += blueCore.userData.rotateSpeed;
+  });
       // простая анимация — покачивание игрока относительно базовой высоты
       if (playerObj && playerObj.mesh) {
         playerObj.mesh.position.y = playerBaseY + Math.sin(Date.now() * 0.002) * 0.6;
