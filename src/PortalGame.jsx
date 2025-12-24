@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from "react-router-dom";
 import './PortalGame.css'
 import createPlayer from './Player';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export default function PortalGame() {
   const mountRef = useRef(null);
@@ -18,9 +19,52 @@ export default function PortalGame() {
     const height = mountRef.current.clientHeight;
     const camera = new THREE.PerspectiveCamera(80, width / height, 0.1, 1000);
 
-    // Позиция камеры под углом, чтобы подчеркнуть рельеф
-    // camera.position.set(0, 200, 160);
-    // camera.lookAt(0, 15, 0);
+
+// После создания scene, добавьте:
+// Загрузка портала
+const loader = new GLTFLoader();
+// Функция для создания портала
+const createPortal = (x, y, z, scale = 20, rotationY = 0) => {
+  loader.load(
+    '/textures/magic_portal/scene.gltf',
+    (gltf) => {
+      const portal = gltf.scene;
+      
+      // ПОЗИЦИЯ
+      portal.position.set(x, y, z);
+      
+      // РАЗМЕР (увеличиваем!)
+      portal.scale.set(scale, scale, scale);
+      
+      // ПОВОРОТ (опционально)
+      portal.rotation.y = rotationY; // повернуть на 90 градусов
+      
+      scene.add(portal);
+      console.log(`Portal created at (${x}, ${y}, ${z})`);
+
+      // Сделаем портал светящимся
+      portal.traverse((child) => {
+  if (child.isMesh) {
+    child.material.transparent = false;
+    child.material.opacity = 1;
+    child.material.needsUpdate = true;
+    child.material.color.multiplyScalar(1.5);
+  }
+    if (child.isMesh && child.material.emissive) {
+    child.material.emissive.set(0x00aaff); // цвет свечения
+    child.material.emissiveIntensity = 6; // ↑ чем больше — тем ярче
+  }
+});
+    },
+    
+    undefined,
+    (error) => console.error('Error loading portal:', error)
+  );
+};
+createPortal(90, 20, -200, 20);
+createPortal(200, 20, 0, 20, Math.PI/2);
+createPortal(0, 20, 100, 20);
+createPortal(-200, 20, 0, 20, Math.PI/2);
 
     // Создаём плоскость с большим числом сегментов и немного смещаем вершины
     const geo = new THREE.PlaneGeometry(4000, 4000, 200, 200); // большое разрешение для текстуры
@@ -143,6 +187,10 @@ scene.add(spotLight);
 
     const animate = () => {
       requestAnimationFrame(animate);
+        portals.forEach((portal) => {
+    portal.rotation.y += 0.01;
+  });
+
       // простая анимация — покачивание игрока относительно базовой высоты
       if (playerObj && playerObj.mesh) {
         playerObj.mesh.position.y = playerBaseY + Math.sin(Date.now() * 0.002) * 0.6;
