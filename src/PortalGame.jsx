@@ -113,7 +113,7 @@ createPortal(-200, 20, 0, 20, Math.PI/2);
     scene.add(directionalLight);
 
     // Добавляем игрока (3D-сферу) — ставим выше максимального подъёма рельефа
-    const playerSize = 150; // УВЕЛИЧИЛ размер
+    const playerSize = 15; // УВЕЛИЧИЛ размер
     const playerBaseY = 15; // Высота над землёй
     let playerObj = createPlayer(scene, { 
     position: new THREE.Vector3(0, playerBaseY, 0), 
@@ -144,7 +144,7 @@ const debugCube = new THREE.Mesh(
   })
 );
 debugCube.position.copy(playerObj.mesh.position); // ТОЧНО в позиции игрока
-scene.add(debugCube);
+// scene.add(debugCube);
 
 // Добавим яркий свет на игрока
 const spotLight = new THREE.PointLight(0xffffff, 2, 100);
@@ -216,7 +216,8 @@ scene.add(spotLight);
       renderer.render(scene, camera);
     };
     animate();
-
+     
+// Обработчик изменения размера окна
     const handleResize = () => {
       if (!mountRef.current) return;
       const w = window.innerWidth;
@@ -233,7 +234,7 @@ scene.add(spotLight);
         mountRef.current.removeChild(renderer.domElement); 
       } 
       // очистка игрока
-      try { if (playerObj && playerObj.dispose) playerObj.dispose(); } catch (e) {}
+      // try { if (playerObj && playerObj.dispose) playerObj.dispose(); } catch (e) {console.log("error disposing player:", e);}
       renderer.dispose(); 
     }; 
   }, []);
