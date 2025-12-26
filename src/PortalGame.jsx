@@ -151,6 +151,33 @@ const spotLight = new THREE.PointLight(0xffffff, 2, 100);
 spotLight.position.set(0, playerBaseY + 20, 0);
 scene.add(spotLight);
 
+    // Управление WASD
+const keys = { w: false, a: false, s: false, d: false };
+const moveSpeed = 1.5; // скорость движения
+
+// Слушатели клавиатуры
+const handleKeyDown = (e) => {
+  const key = e.key.toLowerCase();
+  if (key === 'w' || key === 'ц') keys.w = true;
+  if (key === 'a' || key === 'ф') keys.a = true;
+  if (key === 's' || key === 'ы') keys.s = true;
+  if (key === 'd' || key === 'в') keys.d = true;
+};
+
+const handleKeyUp = (e) => {
+  const key = e.key.toLowerCase();
+  if (key === 'w' || key === 'ц') keys.w = false;
+  if (key === 'a' || key === 'ф') keys.a = false;
+  if (key === 's' || key === 'ы') keys.s = false;
+  if (key === 'd' || key === 'в') keys.d = false;
+};
+
+// Обновление позиции игрока в анимационном цикле
+window.addEventListener('keydown', handleKeyDown);
+window.addEventListener('keyup', handleKeyUp);
+
+
+    // Рендерер
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.shadowMap.enabled = true;
@@ -209,6 +236,24 @@ scene.add(spotLight);
       portals.forEach((blueCore) => {
     blueCore.rotation.z += blueCore.userData.rotateSpeed;
   });
+
+  // ДВИЖЕНИЕ ИГРОКА
+  if (playerObj && playerObj.mesh) {
+    if (keys.w) playerObj.mesh.position.z -= moveSpeed; // вперёд
+    if (keys.s) playerObj.mesh.position.z += moveSpeed; // назад
+    if (keys.a) playerObj.mesh.position.x -= moveSpeed; // влево
+    if (keys.d) playerObj.mesh.position.x += moveSpeed; // вправо
+
+    // Ограничение границ карты
+    const limit = 1900; // граница 4000/2 - отступ
+    playerObj.mesh.position.x = Math.max(-limit, Math.min(limit, playerObj.mesh.position.x));
+    playerObj.mesh.position.z = Math.max(-limit, Math.min(limit, playerObj.mesh.position.z));
+    
+    // Камера следует за игроком
+    camera.position.x = playerObj.mesh.position.x;
+    camera.position.z = playerObj.mesh.position.z + 160;
+    camera.lookAt(playerObj.mesh.position);
+  }
       // простая анимация — покачивание игрока относительно базовой высоты
       if (playerObj && playerObj.mesh) {
         playerObj.mesh.position.y = playerBaseY + Math.sin(Date.now() * 0.002) * 0.6;
