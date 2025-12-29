@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { useEffect, useRef } from 'react'
 import { Link } from "react-router-dom";
 import './PortalGame.css'
-import createPlayer from './Player';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export default function PortalGame() {
@@ -112,44 +111,64 @@ createPortal(-200, 20, 0, 20, Math.PI/2);
     directionalLight.shadow.mapSize.set(1024, 1024);
     scene.add(directionalLight);
 
-    // Добавляем игрока (3D-сферу) — ставим выше максимального подъёма рельефа
-    const playerSize = 15; // УВЕЛИЧИЛ размер
-    const playerBaseY = 15; // Высота над землёй
-    let playerObj = createPlayer(scene, { 
-    position: new THREE.Vector3(0, playerBaseY, 0), 
-    size: playerSize, 
-    color: 0xff00ff // ЯРКИЙ розовый
-});
+// Загрузка модели игрока
+let playerObj = null;
+const playerBaseY = 0; // персонаж стоит на земле
+
+const playerLoader = new GLTFLoader();
+playerLoader.load(
+  '/textures/player/scene.gltf',
+  (gltf) => {
+    console.log(
+  'ANIMATIONS:',
+  gltf.animations.map(a => a.name)
+);
+    const rushia = gltf.scene;
+    rushia.position.set(0, playerBaseY, 0);
+    rushia.scale.set(10, 10, 10); // подберите размер
+    // ПОВОРОТ (опционально)
+      rushia.rotation.y = Math.PI; // повернуть на 180 градусов
+    scene.add(rushia);
+    playerObj = { mesh: rushia };
+    console.log('Player loaded!', rushia);
+  },
+  undefined,
+  (error) => console.error('Error loading player:', error)
+);
 
 
     camera.position.set(0, 200, 160);
     camera.lookAt(0, playerBaseY, 0);
 
 // ОТЛАДОЧНЫЙ КОД - добавьте это:
+// console.log('=== DEBUG INFO ===');
 console.log('=== DEBUG INFO ===');
 console.log('Camera position:', camera.position);
 console.log('Camera looking at:', new THREE.Vector3(0, 2.5, 0));
-console.log('Player position:', playerObj.mesh.position);
-console.log('Player size (radius):', playerSize);
 console.log('Ground position Y:', ground.position.y);
+// console.log('Camera position:', camera.position);
+// console.log('Camera looking at:', new THREE.Vector3(0, 2.5, 0));
+// console.log('Player position:', playerObj.mesh.position);
+// console.log('Player size (radius):', playerSize);
+// console.log('Ground position Y:', ground.position.y);
 
     // Добавим БОЛЬШОЙ светящийся куб точно в позиции игрока
-const debugCube = new THREE.Mesh(
-  new THREE.BoxGeometry(20, 20, 20), // БОЛЬШОЙ
-  new THREE.MeshBasicMaterial({ 
-    color: 0xff0000, 
-    wireframe: false, // НЕ wireframe
-    transparent: true,
-    opacity: 0.8
-  })
-);
-debugCube.position.copy(playerObj.mesh.position); // ТОЧНО в позиции игрока
+// const debugCube = new THREE.Mesh(
+//   new THREE.BoxGeometry(20, 20, 20), // БОЛЬШОЙ
+//   new THREE.MeshBasicMaterial({ 
+//     color: 0xff0000, 
+//     wireframe: false, // НЕ wireframe
+//     transparent: true,
+//     opacity: 0.8
+//   })
+// );
+// debugCube.position.copy(playerObj.mesh.position); // ТОЧНО в позиции игрока
 // scene.add(debugCube);
 
 // Добавим яркий свет на игрока
-const spotLight = new THREE.PointLight(0xffffff, 2, 100);
-spotLight.position.set(0, playerBaseY + 20, 0);
-scene.add(spotLight);
+// const spotLight = new THREE.PointLight(0xffffff, 2, 100);
+// spotLight.position.set(0, playerBaseY + 20, 0);
+// scene.add(spotLight);
 
     // Управление WASD
 const keys = { w: false, a: false, s: false, d: false };
@@ -239,10 +258,24 @@ window.addEventListener('keyup', handleKeyUp);
 
   // ДВИЖЕНИЕ ИГРОКА
   if (playerObj && playerObj.mesh) {
-    if (keys.w) playerObj.mesh.position.z -= moveSpeed; // вперёд
-    if (keys.s) playerObj.mesh.position.z += moveSpeed; // назад
-    if (keys.a) playerObj.mesh.position.x -= moveSpeed; // влево
-    if (keys.d) playerObj.mesh.position.x += moveSpeed; // вправо
+  let moveX = 0;
+  let moveZ = 0;
+
+  if (keys.w) moveZ -= 1;
+  if (keys.s) moveZ += 1;
+  if (keys.a) moveX -= 1;
+  if (keys.d) moveX += 1;
+
+  // если есть движение
+  if (moveX !== 0 || moveZ !== 0) {
+    // движение
+    playerObj.mesh.position.x += moveX * moveSpeed;
+    playerObj.mesh.position.z += moveZ * moveSpeed;
+
+    // угол поворота
+    const angle = Math.atan2(moveX, moveZ);
+    playerObj.mesh.rotation.y = angle;
+  }
 
     // Ограничение границ карты
     const limit = 1900; // граница 4000/2 - отступ
