@@ -13,3 +13,24 @@ html, body, #root {
 .portal-game canvas {
   display: block;
 }
+
+.helper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 100;
+}
+
+#PortalHint {
+  background: rgba(0, 0, 0, 0.8);
+  color: #00ffff;
+  padding: 20px 40px;
+  border-radius: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  border: 2px solid #00ffff;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
